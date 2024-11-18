@@ -14,13 +14,24 @@ namespace WebApiBiblioteca.Services.Autor {
 
         public async Task<ResponseModel<AutorModel>> BuscarAutorPorId(int idAutor) {
 
-            ResponseModel<AutorModel> respota = new ResponseModel<AutorModel>(); //Variavel de resposta
+            ResponseModel<AutorModel> resposta = new ResponseModel<AutorModel>(); //Variavel de resposta
             try {
 
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == idAutor);
+                
+                if(autor == null) {
+                    resposta.Mensagem = "Nenhum registro localizado!";
+                    return resposta;
+                }
+
+                resposta.Dados = autor;
+                resposta.Mensagem = "Autor Localizado!";
+                return resposta;
+
             }catch (Exception ex) {
-                respota.Mensagem = ex.Message;
-                respota.Status = false;
-                return respota;
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
             }
         }
 
